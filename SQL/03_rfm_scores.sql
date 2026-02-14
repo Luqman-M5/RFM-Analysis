@@ -5,7 +5,7 @@
 -- This SQL script calculates RFM scores for customers based on their transaction history and creates a new table to store these scores.
 
 DROP TABLE IF EXISTS rfm_score;
-
+CREATE TABLE rfm_score AS
 with customer_summary as(
 select customer_id,
 max(invoice_date) as recent_date,
@@ -35,11 +35,7 @@ ntile(5) over (order by monetary desc ) as m_score
 from customer_metric
 )
 
-CREATE TABLE rfm_score AS
-SELECT *
-FROM rfm_scores;
-
 SELECT *
 FROM rfm_score
-ORDER BY r_score, f_score, m_score DESC
+ORDER BY r_score ASC, f_score DESC, m_score DESC
 LIMIT 20;
