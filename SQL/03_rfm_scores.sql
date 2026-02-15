@@ -34,7 +34,9 @@ ntile(5) over (order by frequency desc  ) as f_score,
 ntile(5) over (order by monetary desc ) as m_score
 from customer_metric
 )
+select * from rfm_scores;
 
+--2. Query to view the RFM scores for all customers, ordered by recency, frequency, and monetary scores.
 SELECT *
 FROM rfm_score
 ORDER BY r_score ASC, f_score DESC, m_score DESC
