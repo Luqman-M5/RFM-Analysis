@@ -7,6 +7,8 @@ rfm = pd.read_csv(r"Python\rfmdata.csv")
 revenue_by_segment = rfm.groupby('segment', as_index=False)['monetary'].sum()
 revenue_by_segment.rename(columns={'monetary': 'Total_Revenue'}, inplace=True)
 revenue_by_segment_percentage = revenue_by_segment['Total_Revenue'] / revenue_by_segment['Total_Revenue'].sum() * 100
+revenue_by_segment['Revenue_Percentage'] = revenue_by_segment_percentage
+print(revenue_by_segment.head())
 
 plt.figure(figsize=(8,4))
 bars = plt.bar(revenue_by_segment['segment'], revenue_by_segment['Total_Revenue'], color='lightblue', edgecolor='black')
