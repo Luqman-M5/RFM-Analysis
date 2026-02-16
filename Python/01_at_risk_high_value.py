@@ -19,8 +19,6 @@ bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
 plt.figure(figsize=(7,4))
 bars = plt.bar(bin_centers, counts, width=800, color = 'cyan', edgecolor='black')
 
-
-
 plt.title('High-value At Risk customers: spend distribution')
 plt.xlabel('Total Revenue(Monetary)')
 plt.ylabel('Number of Customers')
