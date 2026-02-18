@@ -1,97 +1,223 @@
-# RFM Analysis: Customer Segmentation with PostgreSQL and Python
-This project performs Recency, Frequency, Monetary (RFM) analysis on transactional data to segment customers and understand their value and behaviour over time. It combines SQL data engineering in PostgreSQL (via DBeaver) with Python‑based visualisation, and is designed as a portfolio‑ready analytics project.
+# RFM Customer Segmentation – Luqman Muhammed Kunju
 
-# 1. Project overview
-**Objectives**
+**📋 Project Overview**
 
-- Clean messy transactional CSVs and consolidate them into a customer‑level dataset.
+This project performs Recency, Frequency, Monetary (RFM) analysis on transactional data to segment customers and understand their value and behaviour over time.
+It combines PostgreSQL + DBeaver for data cleaning and feature engineering with Python for visualisation and insight generation.
 
-- Compute RFM metrics (Recency, Frequency, Monetary) for each customer.
+Main goals
 
-- Assign interpretable customer segments such as Champions, Loyal, At Risk, New, and Others.
+Clean messy CSV exports and consolidate them into a single customer‑level dataset.
 
-- Build simple visualisations that answer clear business questions:
-     - Which segments drive the most revenue?
-     - Which segments have the highest average spend per customer?
-     - How do recency and spend relate across segments?
+Compute RFM metrics for every customer.
 
-**Tech stack**
+Assign business‑friendly segments (Champions, Loyal, At Risk, New, Others).
 
-- Database: PostgreSQL (queried via DBeaver)
+Build a small set of clear charts that answer: who brings the most revenue, who is most valuable per customer, and how recency relates to spend.
 
-- Language: Python
+**🗂 Data Pipeline**
 
-- Libraries: pandas, numpy, matplotlib
-
-# 2. Data pipeline
 Raw data
-The starting point is one or more CSV files with transactional data, for example:
-- Multiple rows per customer
 
-- Transaction dates in mixed formats
+One or more CSV files with:
 
-- Separate columns for invoice/transaction ID, customer ID, and amount
+Customer IDs
 
-SQL cleaning and RFM preparation (PostgreSQL + DBeaver)
+Transaction / invoice IDs
 
-All data cleaning and feature engineering are done in PostgreSQL, executed from DBeaver:
+Transaction dates
 
-1. Import raw CSVs into staging tables.
+Revenue / amount fields
 
-2. Clean and standardise:
+🐘 PostgreSQL + DBeaver (SQL cleaning & RFM prep)
+All cleaning and aggregation is done in PostgreSQL, using DBeaver:
 
-   - Fix and cast date columns.
-   - Remove invalid or duplicate records where needed.
-   - Standardise customer identifiers.
+01_create_tables.sql
 
-3. Aggregate to customer level:
+Creates staging and core tables.
 
-   - Recency: days since last purchase at a chosen reference date.
-   - Frequency: number of completed transactions per customer.
-   - Monetary: total spend per customer.
+Defines schemas for importing raw CSV files.
 
-4. Segment customers with RFM rules:
+02_clean_transform.sql
 
-   - Use R, F, and M scores or thresholds in a CASE expression to label customers as Champions, Loyal, At Risk, New, Others, etc.
+Cleans and standardises raw data (dates, IDs, invalid rows).
 
-The final step is exporting a single, clean CSV:
+Transforms transactional data into a consistent format ready for RFM.
 
-- rfmdata.csv – one row per customer with at least:
-  - customer_id
-  - recency
-  - frequency
-  - monetary
-  - segment
+03_rfm_scores.sql
 
-The SQL used for cleaning, aggregation, and segmentation is included in the SQL/ folder as reference. These scripts are written to run directly in PostgreSQL (for example via DBeaver), not from inside Python.
+Calculates recency, frequency, and monetary for each customer.
 
-# 3. Repository structure
-**Adjust names to match your actual files, but a typical layout is:**
+Generates customer‑level RFM scores or metrics.
 
+04_segments_and_reports.sql
+
+Applies RFM rules via CASE logic to assign segments such as Champions, Loyal, At Risk, New, Others.
+
+Prepares summary tables / views for reporting.
+
+The final customer‑level RFM table is exported from PostgreSQL as:
+
+text
+Python/rfmdata.csv
+with columns such as:
+
+customer_id
+
+recency
+
+frequency
+
+monetary
+
+segment
+
+These SQL scripts are provided as documentation of the end‑to‑end data‑engineering process.
+
+📁 Project Structure
+Your actual layout:
+
+text
+.
 ├── SQL/
-
 │   ├── 01_create_tables.sql
-
 │   ├── 02_clean_transform.sql
-
-│   └── 03_rfm_scores.sql
-
+│   ├── 03_rfm_scores.sql
 │   └── 04_segments_and_reports.sql
-
 ├── Python/
-
 │   ├── 01_at_risk_high_value.py
-
 │   ├── 02_revenue_by_segment.py
-
-│   └── 03_avg_value_per_segment.py
-
+│   ├── 03_avg_value_per_segment.py
 │   └── 04_recency_vs_spend.py
-
 ├── Python/rfmdata.csv
-
 ├── requirements.txt
-
 └── README.md
+🧮 RFM table (rfmdata.csv)
+Each row in Python/rfmdata.csv represents one customer:
 
+Column	Description
+customer_id	Unique customer identifier
+recency	Days since last purchase
+frequency	Number of transactions
+monetary	Total revenue generated by the customer
+segment	RFM segment (Champions, Loyal, At Risk, …)
+📊 Python Analysis & Visualisations
+All analysis uses rfmdata.csv plus pandas, numpy, and matplotlib.
 
+1️⃣ High‑Value At‑Risk Customers – 01_at_risk_high_value.py
+What it does
+
+Filters the RFM data to identify high‑value “At Risk” customers based on segment and monetary thresholds.
+
+Plots distributions (for example, spend distribution within the At Risk segment) to show how much revenue is concentrated in these customers.
+
+Business question
+
+Which high‑spending customers are at risk of churning and should be prioritised for retention?
+
+2️⃣ Total Revenue by Segment – 02_revenue_by_segment.py
+What it does
+
+Groups by segment to compute Total_Revenue for each segment.
+
+Calculates each segment’s percentage share of total revenue.
+
+Plots a bar chart:
+
+“Total Revenue by Customer Segment”
+– Bar height: total revenue per segment
+– Label on each bar: revenue share in %
+
+Business question
+
+Which RFM segments drive the most overall revenue?
+
+3️⃣ Average Value per Segment – 03_avg_value_per_segment.py
+What it does
+
+Computes the average monetary value per customer in each segment.
+
+Visualises:
+
+“Average Monetary Value by Customer Segment”
+– One point or bar per segment
+– Y‑axis = average spend per customer
+
+Business question
+
+On average, which types of customers are most valuable individually?
+
+4️⃣ Recency vs Spend by Segment – 04_recency_vs_spend.py
+What it does
+
+Aggregates average recency and average monetary per segment.
+
+Plots:
+
+“Recency vs Spend by Customer Segment”
+– One series for average spend
+– One series for average recency (for example, on a secondary axis)
+
+Business question
+
+How does customer value relate to how recently each segment has purchased, and which segments are both valuable and becoming inactive?
+
+⚙️ Setup & Run Instructions
+1. Clone the repository
+bash
+git clone <your-repo-url>
+cd <your-repo-folder>
+2. (Optional) Rebuild the RFM table in PostgreSQL
+Create a PostgreSQL database.
+
+Open the .sql files from the SQL/ folder in DBeaver.
+
+Run them in order:
+
+text
+01_create_tables.sql
+02_clean_transform.sql
+03_rfm_scores.sql
+04_segments_and_reports.sql
+Export the final customer‑level RFM table as rfmdata.csv into the Python/ folder.
+
+3. Create and activate a virtual environment
+bash
+python -m venv .venv
+
+# Windows:
+.venv\Scripts\activate
+
+# macOS / Linux:
+source .venv/bin/activate
+4. Install Python dependencies
+bash
+pip install -r requirements.txt
+5. Run the Python analyses
+From the project root:
+
+bash
+# High-value At-Risk customers
+python Python/01_at_risk_high_value.py
+
+# Total Revenue by Segment
+python Python/02_revenue_by_segment.py
+
+# Average Monetary Value per Segment
+python Python/03_avg_value_per_segment.py
+
+# Recency vs Spend by Segment
+python Python/04_recency_vs_spend.py
+Each script reads Python/rfmdata.csv and opens the corresponding plot window.
+
+📌 Insights & Use Cases
+This project shows how RFM analysis can support real‑world decisions:
+
+Revenue concentration
+Understand which segments contribute most revenue overall.
+
+Customer value
+Compare average spend per customer across segments to focus on the most valuable groups.
+
+Churn & retention
+Use the At‑Risk and Recency vs Spend analyses to identify high‑value customers who are going inactive, and justify targeted retention campaigns.
