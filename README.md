@@ -1,4 +1,4 @@
-# RFM Customer Segmentation – Luqman Muhammed Kunju
+# Customer Segmentation & RFM Analysis
 
 **Project Overview**
 
@@ -23,6 +23,7 @@ Raw data - One CSV file with:
 All cleaning and aggregation is done in PostgreSQL, using DBeaver:
 
 **01_create_tables.sql**
+
 - Creates staging and core tables.
 - Defines schemas for importing raw CSV files.
 
@@ -83,6 +84,7 @@ Your actual layout:
 └── README.md
 
 **Column	Description**
+
 - customer_id:	Unique customer identifier
 - r_score: Recency score (All scores are calculated using ntile(5) function in SQL)
 - f_score: frequency score (Which splits the data into 5 and within the data it sorts top 20% to bottom 20%)
@@ -93,9 +95,11 @@ Your actual layout:
 - segment:	RFM segment (Champions, Loyal, At Risk, Others)
 
 **Python Analysis & Visualisations**
+
 All analysis uses rfmdata.csv plus pandas, numpy, and matplotlib.
 
 **High‑Value At‑Risk Customers – 01_at_risk_high_value.py**
+
 What it does:
 - Filters the RFM data to identify high‑value “At Risk” customers based on segment and monetary threshold(3000).
 - Plots distributions (for example, spend distribution within the At Risk segment) to show how much revenue is concentrated in these customers.
@@ -103,105 +107,85 @@ What it does:
 Business question: Which high‑spending customers are at risk of churning and should be prioritised for retention?
 
 **Total Revenue by Segment – 02_revenue_by_segment.py**
+
 What it does:
 - Groups by segment to compute Total_Revenue for each segment.
 - Calculates each segment’s percentage share of total revenue.
-- Plots a bar chart:
+- Plots a bar chart: “Total Revenue by Customer Segment”
+   - Bar height: total revenue per segment
+   - Label on each bar: revenue share in %
 
-“Total Revenue by Customer Segment”
-– Bar height: total revenue per segment
-– Label on each bar: revenue share in %
+Business question: Which RFM segments drive the most overall revenue?
 
-Business question
+**Average Value per Segment – 03_avg_value_per_segment.py**
+What it does:
+- Computes the average monetary value per customer in each segment.
+- Visualises: “Average Monetary Value by Customer Segment”
+  - One point or bar per segment
+  - Y‑axis = average spend per customer
 
-Which RFM segments drive the most overall revenue?
+Business question: On average, which types of customers are most valuable individually?
 
-3️⃣ Average Value per Segment – 03_avg_value_per_segment.py
-What it does
+**Recency vs Spend by Segment – 04_recency_vs_spend.py**
+What it does:
+- Aggregates average recency and average monetary per segment.
+- Plots: “Recency vs Spend by Customer Segment”
+  - One series for average spend
+  - One series for average recency (for example, on a secondary axis)
 
-Computes the average monetary value per customer in each segment.
+Business question: How does customer value relate to how recently each segment has purchased, and which segments are both valuable and becoming inactive?
 
-Visualises:
+# Setup & Run Instructions
+**1. Clone the repository**
 
-“Average Monetary Value by Customer Segment”
-– One point or bar per segment
-– Y‑axis = average spend per customer
+- bash
+- git clone <your-repo-url>
+- cd <your-repo-folder>
 
-Business question
+**2. (Optional) Rebuild the RFM table in PostgreSQL**
+  
+- Create a PostgreSQL database.
+- Open the .sql files from the SQL/ folder in DBeaver.
+- Run them in order:
+  - 01_create_tables.sql
+  - 02_clean_transform.sql
+  - 03_rfm_scores.sql
+  - 04_segments_and_reports.sql
+- Export the final customer‑level RFM table as rfmdata.csv into the Python/ folder.
 
-On average, which types of customers are most valuable individually?
+**3. Create and activate a virtual environment**
 
-4️⃣ Recency vs Spend by Segment – 04_recency_vs_spend.py
-What it does
+- bash
+- python -m venv .venv
 
-Aggregates average recency and average monetary per segment.
-
-Plots:
-
-“Recency vs Spend by Customer Segment”
-– One series for average spend
-– One series for average recency (for example, on a secondary axis)
-
-Business question
-
-How does customer value relate to how recently each segment has purchased, and which segments are both valuable and becoming inactive?
-
-⚙️ Setup & Run Instructions
-1. Clone the repository
-bash
-git clone <your-repo-url>
-cd <your-repo-folder>
-2. (Optional) Rebuild the RFM table in PostgreSQL
-Create a PostgreSQL database.
-
-Open the .sql files from the SQL/ folder in DBeaver.
-
-Run them in order:
-
-text
-01_create_tables.sql
-02_clean_transform.sql
-03_rfm_scores.sql
-04_segments_and_reports.sql
-Export the final customer‑level RFM table as rfmdata.csv into the Python/ folder.
-
-3. Create and activate a virtual environment
-bash
-python -m venv .venv
-
-# Windows:
+**Windows:**
 .venv\Scripts\activate
 
-# macOS / Linux:
+**macOS / Linux:**
 source .venv/bin/activate
-4. Install Python dependencies
-bash
-pip install -r requirements.txt
-5. Run the Python analyses
+
+**4. Install Python dependencies**
+
+- bash
+- pip install -r requirements.txt
+
+**5. Run the Python analyses**
+
 From the project root:
+- bash
+- High-value At-Risk customers
+  - python Python/01_at_risk_high_value.py
+- Total Revenue by Segment
+  - python Python/02_revenue_by_segment.py
+- Average Monetary Value per Segment
+  - python Python/03_avg_value_per_segment.py
+- Recency vs Spend by Segment
+  - python Python/04_recency_vs_spend.py
+  
+**Each script reads Python/rfmdata.csv and opens the corresponding plot window.**
 
-bash
-# High-value At-Risk customers
-python Python/01_at_risk_high_value.py
-
-# Total Revenue by Segment
-python Python/02_revenue_by_segment.py
-
-# Average Monetary Value per Segment
-python Python/03_avg_value_per_segment.py
-
-# Recency vs Spend by Segment
-python Python/04_recency_vs_spend.py
-Each script reads Python/rfmdata.csv and opens the corresponding plot window.
-
-📌 Insights & Use Cases
+# Insights & Use Cases
 This project shows how RFM analysis can support real‑world decisions:
-
-Revenue concentration
-Understand which segments contribute most revenue overall.
-
-Customer value
-Compare average spend per customer across segments to focus on the most valuable groups.
-
-Churn & retention
-Use the At‑Risk and Recency vs Spend analyses to identify high‑value customers who are going inactive, and justify targeted retention campaigns.
+- Revenue concentration: Understand which segments contribute most revenue overall.
+- Customer value: Compare average spend per customer across segments to focus on the most valuable groups.
+- Churn & retention: use the At‑Risk and Recency vs Spend analyses to identify high‑value customers who are going inactive, and justify targeted retention campaigns.
