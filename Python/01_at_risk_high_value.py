@@ -29,7 +29,7 @@ for bar, count, pct in zip(bars, counts, percentage):
         plt.text(
             bar.get_x() + bar.get_width() / 2,
             bar.get_height(),
-            f'{count}\n({pct:.1f}%)',
+            f'({pct:.1f}%)',
             ha='center',
             va='bottom',
             fontsize=8
