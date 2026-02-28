@@ -105,6 +105,7 @@ What it does:
 - Plots distributions (for example, spend distribution within the At Risk segment) to show how much revenue is concentrated in these customers.
 
 Business question: Which high‑spending customers are at risk of churning and should be prioritised for retention?
+<img width="871" height="495" alt="Screenshot 2026-02-21 191144" src="https://github.com/user-attachments/assets/346f7cb6-c85a-4d1a-8303-6b1d5b83236a" />
 
 **Total Revenue by Segment – 02_revenue_by_segment.py**
 
@@ -116,6 +117,7 @@ What it does:
    - Label on each bar: revenue share in %
 
 Business question: Which RFM segments drive the most overall revenue?
+<img width="990" height="493" alt="Screenshot 2026-02-21 191418" src="https://github.com/user-attachments/assets/144c16e6-04a2-4659-b441-96d445f77616" />
 
 **Average Value per Segment – 03_avg_value_per_segment.py**
 What it does:
@@ -125,6 +127,7 @@ What it does:
   - Y‑axis = average spend per customer
 
 Business question: On average, which types of customers are most valuable individually?
+<img width="985" height="482" alt="Screenshot 2026-02-21 191438" src="https://github.com/user-attachments/assets/22ddbb3d-afc8-402f-b30b-fce83d2f68cd" />
 
 **Recency vs Spend by Segment – 04_recency_vs_spend.py**
 What it does:
@@ -134,6 +137,7 @@ What it does:
   - One series for average recency (for example, on a secondary axis)
 
 Business question: How does customer value relate to how recently each segment has purchased, and which segments are both valuable and becoming inactive?
+<img width="993" height="499" alt="Screenshot 2026-02-21 191500" src="https://github.com/user-attachments/assets/f5af9e8a-01fb-408a-83d3-7eb7aca50478" />
 
 # Setup & Run Instructions
 **1. Clone the repository**
